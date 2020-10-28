@@ -2,8 +2,8 @@
 import random
 
 # parameters
-populationCount = 25
-geneCount = 15
+populationCount = 26
+geneCount = 16
 
 
 # define Individual class
@@ -18,14 +18,14 @@ population = []
 def calculate_fitness(pop):
     total_fitness = 0
     for count in range(len(pop)):
-        total_fitness += pop[i].fitness
+        total_fitness += pop[count].fitness
     return total_fitness
 
 
 def calculate_average_fitness(pop):
     total_fitness = 0
     for count in range(len(pop)):
-        total_fitness += pop[i].fitness
+        total_fitness += pop[count].fitness
     avg_fitness = total_fitness / len(pop)
     return avg_fitness
 
@@ -65,6 +65,42 @@ childFitness = calculate_fitness(offspring)
 
 parentAvgFitness = calculate_average_fitness(population)
 childAvgFitness = calculate_average_fitness(offspring)
+print("**Before Cross-over**")
+print('------------------------')
+print('Parent Fitness: ' + str(parentFitness))
+print('Offspring Fitness: ' + str(childFitness))
+print('------------------------\n')
+
+print('---------------------------------')
+print('Parent Average Fitness: ' + str(parentAvgFitness))
+print('Offspring Average Fitness: ' + str(childAvgFitness))
+print('---------------------------------\n\n\n')
+
+
+for i in range(0, len(offspring), 2):
+    crossoverPoint = random.randint(0, geneCount)
+    offspring1Genes = offspring[i].gene
+    offspring2Genes = offspring[i + 1].gene
+
+    swapGene1 = offspring1Genes[crossoverPoint:]
+    keepGene1 = offspring1Genes[:crossoverPoint]
+
+    swapGene2 = offspring2Genes[crossoverPoint:]
+    keepGene2 = offspring2Genes[:crossoverPoint]
+
+    newGene1 = keepGene1 + swapGene2
+    newGene2 = keepGene2 + swapGene1
+
+    offspring[i].gene = newGene1
+    offspring[i + 1].gene = newGene2
+
+
+parentFitness = calculate_fitness(population)
+childFitness = calculate_fitness(offspring)
+
+parentAvgFitness = calculate_average_fitness(population)
+childAvgFitness = calculate_average_fitness(offspring)
+print("**After Cross-over**")
 print('------------------------')
 print('Parent Fitness: ' + str(parentFitness))
 print('Offspring Fitness: ' + str(childFitness))
