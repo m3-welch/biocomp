@@ -49,7 +49,7 @@ for x in range(0, populationCount):
 
 offspring = []
 
-# *sexy times*
+# create offspring
 for i in range(0, populationCount):
     parent1 = random.randint(0, populationCount - 1)
     offspring1 = population[parent1]
@@ -65,9 +65,12 @@ childFitness = calculate_fitness(offspring)
 
 parentAvgFitness = calculate_average_fitness(population)
 childAvgFitness = calculate_average_fitness(offspring)
+print('------------------------')
+print('Parent Fitness: ' + str(parentFitness))
+print('Offspring Fitness: ' + str(childFitness))
+print('------------------------\n')
 
-print('Parent Fitness: ' + str(parentFitness) + '\n')
-print('Offspring Fitness: ' + str(childFitness) + '\n')
-
-print('Parent Average Fitness: ' + str(parentAvgFitness) + '\n')
+print('---------------------------------')
+print('Parent Average Fitness: ' + str(parentAvgFitness))
 print('Offspring Average Fitness: ' + str(childAvgFitness))
+print('---------------------------------')
