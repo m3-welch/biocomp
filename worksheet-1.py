@@ -1,10 +1,11 @@
 # imports
 import random
+import copy
 
 # parameters
 populationCount = int(input("What is the population size? "))
 geneCount = int(input("What is the length of the genes? "))
-mutationRate = float(input("What is the mutation rate? "))
+mutationRate = float(input("What is the mutation rate? (%) ")) / 100
 
 
 # define Individual class
@@ -120,15 +121,16 @@ numberOfGenerations = input("How many generations would you like this to run for
 offspring = create_offspring(population)
 
 for i in range(int(numberOfGenerations)):
-    offspring = single_point_crossover(offspring)
-    mutatedPop = bitwise_mutation(offspring)
+    offspring = copy.deepcopy(create_offspring(population))
+    offspring = copy.deepcopy(single_point_crossover(offspring))
+    mutatedPop = copy.deepcopy(bitwise_mutation(offspring))
     generate_fitness(mutatedPop)
 
     mutationFitness = calculate_fitness(mutatedPop)
     bestInGeneration = get_fittest(mutatedPop)
     avgMutatedFitness = calculate_average_fitness(mutatedPop)
 
-    offspring = mutatedPop
+    population = copy.deepcopy(mutatedPop)
 
     print("\n---- Generation " + str(i + 1) + " ----")
     print("Total Fitness: " + str(mutationFitness))
