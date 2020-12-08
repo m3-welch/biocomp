@@ -7,13 +7,13 @@ from sklearn import preprocessing
 
 populationCount = 50
 upperBound = 1.0
-lowerBound = 0.0
+lowerBound = -1.0
 numberOfInputNodes = 5
 numberOfHiddenNodes = 4
 numberOfOutputNodes = 1
 geneCount = (numberOfInputNodes * numberOfHiddenNodes) + (numberOfHiddenNodes * numberOfOutputNodes)
-mutationRate = 0.02
-maxMutation = 0.1
+mutationRate = 0.05
+maxMutation = 0.2
 numberOfGenerations = 50
 
 
@@ -46,7 +46,7 @@ def get_fittest(pop):
 
 
 def open_data_files():
-    data1file = open("data1.txt", "r")
+    data1file = open("data2.txt", "r")
     data1 = data1file.readlines()
     # data2file = open("data2.txt", "r")
     # data2 = data2file.readlines()
@@ -172,15 +172,9 @@ def bitwise_mutation(pop):
                 if mutprob < (100 * mutationRate):
                     alter = random.uniform(0, maxMutation)
                     if random.randint(0, 2):
-                        if gene + alter > upperBound:
-                            gene = upperBound
-                        else:
-                            gene += alter
+                        gene += alter
                     else:
-                        if gene - alter < lowerBound:
-                            gene = lowerBound
-                        else:
-                            gene -= alter
+                        gene -= alter
                 pop[k].hweights[j][l] = gene
 
         for j in range(0, numberOfOutputNodes):
@@ -190,15 +184,9 @@ def bitwise_mutation(pop):
                 if mutprob < (100 * mutationRate):
                     alter = random.uniform(0, maxMutation)
                     if random.randint(0, 2):
-                        if gene + alter > upperBound:
-                            gene = upperBound
-                        else:
-                            gene += alter
+                        gene += alter
                     else:
-                        if gene - alter < lowerBound:
-                            gene = lowerBound
-                        else:
-                            gene -= alter
+                        gene -= alter
                 pop[k].oweights[j][l] = gene
     return pop
 
