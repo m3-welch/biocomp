@@ -9,7 +9,7 @@ populationCount = 50
 upperBound = 1.0
 lowerBound = -1.0
 numberOfInputNodes = 5
-numberOfHiddenNodes = 4
+numberOfHiddenNodes = 3
 numberOfOutputNodes = 1
 geneCount = (numberOfInputNodes * numberOfHiddenNodes) + (numberOfHiddenNodes * numberOfOutputNodes)
 mutationRate = 0.05
@@ -46,7 +46,7 @@ def get_fittest(pop):
 
 
 def open_data_files():
-    data1file = open("data2.txt", "r")
+    data1file = open("data1.txt", "r")
     data1 = data1file.readlines()
     # data2file = open("data2.txt", "r")
     # data2 = data2file.readlines()
@@ -122,8 +122,6 @@ def generate_fitness(ind):
 
     data = open_data_files()
 
-    outputs = []
-
     for t in range(len(data)):
         # Calculate the output value for each hidden layer node
         hiddenNodeOutput = numpy.zeros(numberOfHiddenNodes)
@@ -133,20 +131,18 @@ def generate_fitness(ind):
                 hiddenNodeOutput[i] += (float(ind.hweights[i][j]) * float(data[t].input[j]))
             hiddenNodeOutput[i] += ind.hweights[i][numberOfInputNodes]  # Bias
 
-        hiddenNodeOutput = sigmoid(hiddenNodeOutput)
-
-        hiddenLayerOutput = normalise(hiddenNodeOutput)
-
+        hiddenLayerOutput = sigmoid(hiddenNodeOutput)
 
         # Calculate the output value for each output layer node
         inputNodeOutput = numpy.zeros(numberOfOutputNodes)
         for i in range(numberOfOutputNodes):
-            inputNodeOutput[i] = 0
             for j in range(numberOfHiddenNodes):
                 inputNodeOutput[i] += (float(ind.oweights[i][j]) * float(hiddenLayerOutput[j]))
             inputNodeOutput[i] += ind.oweights[i][numberOfHiddenNodes]  # Bias
 
         inputNodeOutput = sigmoid(inputNodeOutput)
+
+        print(str(inputNodeOutput[0]))
 
         # Calculate the error based on the actual and perceived value
         if (int(data[t].actualValue) == 1) and (inputNodeOutput[0] < 0.5):
@@ -171,10 +167,10 @@ def bitwise_mutation(pop):
                 mutprob = random.randint(0, 100)
                 if mutprob < (100 * mutationRate):
                     alter = random.uniform(0, maxMutation)
-                    if random.randint(0, 2):
-                        gene += alter
-                    else:
+                    if random.randint(0, 1):
                         gene -= alter
+                    else:
+                        gene += alter
                 pop[k].hweights[j][l] = gene
 
         for j in range(0, numberOfOutputNodes):
@@ -183,7 +179,7 @@ def bitwise_mutation(pop):
                 mutprob = random.randint(0, 100)
                 if mutprob < (100 * mutationRate):
                     alter = random.uniform(0, maxMutation)
-                    if random.randint(0, 2):
+                    if random.randint(0, 1):
                         gene += alter
                     else:
                         gene -= alter
@@ -220,8 +216,6 @@ for x in range(0, populationCount):
 
     population.append(newind)
 
-offspring = create_offspring(population)
-
 with open('datamining.csv', 'w') as datamining:
     dataminingWriter = csv.writer(datamining)
 
@@ -232,6 +226,7 @@ with open('datamining.csv', 'w') as datamining:
         offspring = copy.deepcopy(create_offspring(population))
         offspring = copy.deepcopy(single_point_crossover(offspring))
         mutatedPop = copy.deepcopy(bitwise_mutation(offspring))
+        mutatedPop = copy.deepcopy(create_offspring(mutatedPop))
         for j in range(populationCount):
             mutatedPop[j].fitness = generate_fitness(mutatedPop[j])
 
