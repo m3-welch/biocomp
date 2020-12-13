@@ -4,6 +4,7 @@ import copy
 import csv
 import numpy
 from sklearn import preprocessing
+import matplotlib.pyplot as plt
 
 populationCount = 50
 upperBound = 1.0
@@ -12,8 +13,8 @@ numberOfInputNodes = 5
 numberOfHiddenNodes = 3
 numberOfOutputNodes = 1
 geneCount = (numberOfInputNodes * numberOfHiddenNodes) + (numberOfHiddenNodes * numberOfOutputNodes)
-mutationRate = 0.05
-maxMutation = 0.2
+mutationRate = 0.25
+maxMutation = 0.3
 numberOfGenerations = 50
 
 
@@ -216,6 +217,10 @@ for x in range(0, populationCount):
 
     population.append(newind)
 
+best_in_gen = []
+avergae_fitness = []
+generation = []
+
 with open('datamining.csv', 'w') as datamining:
     dataminingWriter = csv.writer(datamining)
 
@@ -234,6 +239,10 @@ with open('datamining.csv', 'w') as datamining:
         bestInGeneration = get_fittest(mutatedPop)
         avgMutatedFitness = calculate_average_fitness(mutatedPop)
 
+        avergae_fitness.append(avgMutatedFitness)
+        best_in_gen.append(bestInGeneration)
+        generation.append(i + 1)
+
         population = copy.deepcopy(mutatedPop)
 
         dataminingWriter.writerow([bestInGeneration, avgMutatedFitness])
@@ -242,5 +251,11 @@ with open('datamining.csv', 'w') as datamining:
         print("Total Fitness: " + str(mutationFitness))
         print("Fittest Individual: " + str(bestInGeneration))
         print("Average Fitness: " + str(avgMutatedFitness))
+
+plt.plot(generation, best_in_gen, color='g')
+plt.plot(generation, avergae_fitness, color='orange')
+plt.title("Best in generation (green) and average fitness (orange) over 50 generations")
+plt.ylim(bottom=0, top=50)
+plt.show()
 
 datamining.close()
